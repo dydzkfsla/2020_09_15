@@ -79,12 +79,17 @@ namespace _2020_09_14
         public void AddInterest()
         {
             balance += (int)(Balance * interest);
-            Console.WriteLine($"{name}의 계좌 {accNum} 에서 {interest*100}% 의이자를 받았습니다.\n 잔액은 {Balance.ToString("c")}원 입니다.");
+            Console.WriteLine($"{name}의 계좌 {accNum} 에서 {BankAccount.interest*100}% 의이자를 받았습니다.\n 잔액은 {Balance.ToString("c")}원 입니다.");
         }
         
         public void PrintAccInfo()
         {
             Console.WriteLine($"예금주명:{Name}, 계좌번호:{accNum}, 잔액:{balance.ToString("c")}");
+        }
+
+        public void SetInterest(double interest)
+        {
+            BankAccount.interest = interest;
         }
         #endregion
     }
@@ -108,7 +113,7 @@ namespace _2020_09_14
             BankAccount bank2 = new BankAccount("33-33-33", "사람2");
             bank2.Name = "싸람2";
             bank2.PrintAccInfo();
-
+            bank2.SetInterest(0.3);
 
             bank2.InputMoney(1000);
             bank2.OutputMoney(100);
