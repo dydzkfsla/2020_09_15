@@ -3,15 +3,39 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace _2020_09_15
 {
-    class AccontManager 
+    class AccontManager
     {
         List<BankAccount> banks = new List<BankAccount>();
         BankAccount bank = new BankAccount();
+
+        private int SelectAcc()
+        {
+            Console.Clear();
+            for(int i =0; i < banks.Count; i++)     //계좌 목록 출력
+            {
+                Console.WriteLine($"{i+1}번 계좌 이름:{banks[i].Name}, 계좌:{banks[i].AccNum}, 잔액:{banks[i].Balance}");
+            }
+
+            Console.Write("계좌를 선택하세요: ");
+            int temp = 0;
+            if(int.TryParse(Console.ReadLine(),out temp))
+            {
+                if(temp > banks.Count || temp < 1)
+                {
+                    Console.WriteLine("입력이 잘못되었습니다.");
+                    return -1;
+                }
+                return temp-1;
+            }
+            Console.WriteLine("입력이 잘못되었습니다.");
+            return -1;
+        }
 
         public void PrintMenu()
         {
@@ -30,29 +54,55 @@ namespace _2020_09_15
             Console.Write("예금주명:");
             string accName = Console.ReadLine();
 
-            BankAccount account = new BankAccount(accNum, accName);
-            banks.Add(account);
+            bank = new BankAccount(accNum,accName);
+            banks.Add(bank);
         }
         public void Deposit() //2. 입금
         {
             Console.Clear();
+            if(banks.Count == 0)        //계설된 계좌 없음
+            {
+                Console.WriteLine("계설된 계좌가 없습니다.");
+                return;
+            }
+            int index = SelectAcc();
+            if (index == -1) return; 
             Console.Write("입금하실 금액:");
             int money = int.Parse(Console.ReadLine());
+            banks[index].InputMoney(money);
         }
         public void Withdraw() //3. 출금
         {
             Console.Clear();
+            if (banks.Count == 0)       //계설된 계좌 없음
+            {
+                Console.WriteLine("계설된 계좌가 없습니다.");
+                return;
+            }
+            int index = SelectAcc();
+            if (index == -1) return;
+            Console.Write("출금하실 금액:");
+            int money = int.Parse(Console.ReadLine());
+            banks[index].OutputMoney(money);
         }
 
         public void Balanceinquiry()
         {
             Console.Clear();
+            if (banks.Count == 0)        //계설된 계좌 없음
+            {
+                Console.WriteLine("계설된 계좌가 없습니다.");
+                return;
+            }
+            for (int i = 0; i < banks.Count; i++)     //계좌 목록 출력
+            {
+                Console.WriteLine($"{i + 1}번 계좌 이름:{banks[i].Name}, 계좌:{banks[i].AccNum}, 잔액:{banks[i].Balance}");
+            }
         }
 
         public void End()
         {
             Console.Clear();
-
         }
     }
 
@@ -60,7 +110,6 @@ namespace _2020_09_15
     {
         static void Main()
         {
-            System.Windows.Forms.MessageBox.Show("hello","title", System.Windows.Forms.MessageBoxButtons.YesNo);
             AccontManager manager = new AccontManager();
             int choice = 0;
             Console.WriteLine(manager.ToString());
@@ -85,7 +134,6 @@ namespace _2020_09_15
                     default:
                         Console.WriteLine("다시 선택하세요");break;
                 }
-                bank.PrintAccInfo();
             }
         }
     }
